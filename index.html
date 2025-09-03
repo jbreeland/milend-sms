@@ -1,21 +1,121 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Milend SMS</title>
   <style>
     body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 5rem;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f2f1;
     }
-    h1 {
-      color: #00468c;
+    .header {
+      background-color: #6264A7;
+      color: white;
+      padding: 12px 20px;
+      font-size: 18px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .phone-input {
+      padding: 10px 20px;
+      background: white;
+      border-bottom: 1px solid #ccc;
+    }
+    .phone-input input {
+      padding: 8px;
+      width: 300px;
+      font-size: 14px;
+    }
+    .messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .message {
+      margin-bottom: 10px;
+      max-width: 60%;
+      padding: 10px;
+      border-radius: 8px;
+      clear: both;
+    }
+    .user {
+      background-color: #E5E5F1;
+      float: right;
+      text-align: right;
+    }
+    .customer {
+      background-color: white;
+      border: 1px solid #ccc;
+      float: left;
+    }
+    .input-area {
+      padding: 10px 20px;
+      background-color: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      gap: 10px;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+    }
+    .input-area button {
+      padding: 10px 20px;
+      background-color: #6264A7;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .input-area button:disabled {
+      background-color: #bbb;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <h1>🚧 Milend SMS</h1>
-  <p>SMS Messaging Coming Soon.</p>
+  <div class="container">
+    <div class="header">Milend SMS</div>
+    <div class="phone-input">
+      To: <input type="text" id="phoneNumber" placeholder="Enter 10-digit phone number">
+    </div>
+    <div class="messages" id="messages">
+      <div class="message customer">Hi, I'm interested in a loan.</div>
+      <div class="message user">Great! We can help you with that. What's your loan amount?</div>
+    </div>
+    <div class="input-area">
+      <input type="text" id="messageInput" placeholder="Type a message..." oninput="checkInput()">
+      <button id="sendBtn" onclick="sendMessage()" disabled>Send</button>
+    </div>
+  </div>
+
+  <script>
+    function checkInput() {
+      const input = document.getElementById('messageInput');
+      document.getElementById('sendBtn').disabled = input.value.trim() === '';
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const msgContainer = document.getElementById('messages');
+      const bubble = document.createElement('div');
+      bubble.className = 'message user';
+      bubble.textContent = msg;
+      msgContainer.appendChild(bubble);
+
+      input.value = '';
+      checkInput();
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+    }
+  </script>
 </body>
 </html>
