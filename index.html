@@ -2,133 +2,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Milend SMS</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-        }
-        .sidebar {
-            width: 220px;
-            background-color: #f3f3f3;
-            border-right: 1px solid #ccc;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-        .sidebar h3 {
-            margin-top: 0;
-        }
-        .chat {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .header {
-            background-color: #f9f9f9;
-            padding: 1rem;
-            border-bottom: 1px solid #ccc;
-            font-weight: bold;
-        }
-        .messages {
-            flex-grow: 1;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-        .bubble {
-            max-width: 70%;
-            margin-bottom: 10px;
-            padding: 10px 15px;
-            border-radius: 20px;
-            display: inline-block;
-            position: relative;
-        }
-        .bubble.user {
-            background-color: #0078d4;
-            color: white;
-            align-self: flex-end;
-        }
-        .bubble.customer {
-            background-color: #e5e5ea;
-            color: black;
-            align-self: flex-start;
-        }
-        .timestamp {
-            font-size: 0.7rem;
-            color: #777;
-            margin-top: 3px;
-        }
-        .composer {
-            padding: 1rem;
-            border-top: 1px solid #ccc;
-            display: flex;
-            gap: 0.5rem;
-        }
-        .composer input,
-        .composer textarea {
-            width: 100%;
-            padding: 0.5rem;
-            font-size: 1rem;
-        }
-        .composer button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Milend SMS Test</title>
 </head>
 <body>
-    <div class="sidebar">
-        <h3>Chats</h3>
-        <ul>
-            <li>206-555-0100</li>
-            <li>470-555-0199</li>
-            <li>404-555-0172</li>
-        </ul>
-    </div>
-    <div class="chat">
-        <div class="header">To: 206-555-0100</div>
-        <div class="messages" id="messages">
-            <div class="bubble customer">
-                Hi, I got your postcard about refinancing. Can you tell me more?
-                <div class="timestamp">Sep 3, 1:42 PM</div>
-            </div>
-            <div class="bubble user">
-                Absolutely — happy to help. Do you have 2 minutes for a quick chat?
-                <div class="timestamp">Sep 3, 1:43 PM</div>
-            </div>
-        </div>
-        <div class="composer">
-            <textarea id="message" rows="2" placeholder="Type your message..."></textarea>
-            <button onclick="sendSMS()">Send</button>
-        </div>
-    </div>
+  <h1>Send SMS</h1>
+  <form id="smsForm">
+    <label for="to">To:</label>
+    <input type="text" id="to" name="to" value="+19435550123"><br><br>
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message" value="Test message"><br><br>
+    <button type="submit">Send</button>
+  </form>
 
-    <script>
-        async function sendSMS() {
-            const message = document.getElementById("message").value;
-            const response = await fetch("https://example-logicapp-url.com/sendsms", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ to: "2065550100", message })
-            });
+  <pre id="response"></pre>
 
-            const data = await response.json();
+  <script>
+    document.getElementById("smsForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const to = document.getElementById("to").value;
+      const message = document.getElementById("message").value;
 
-            if (data.error) {
-                alert("❌ " + data.error);
-            } else {
-                const messagesDiv = document.getElementById("messages");
-                const bubble = document.createElement("div");
-                bubble.className = "bubble user";
-                bubble.innerHTML = `${message}<div class="timestamp">Now</div>`;
-                messagesDiv.appendChild(bubble);
-                document.getElementById("message").value = "";
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }
-        }
-    </script>
+      const response = await fetch("https://prod-00.northcentralus.logic.azure.com:443/workflows/e2777754d0e84d079fc7c0de99b6e218/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Uh0cyjoLG1HznoghZQ-n9CAA5RQZkgg4baFMzITzcUI", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to, message })
+      });
+
+      const result = await response.json();
+      document.getElementById("response").textContent = JSON.stringify(result, null, 2);
+    });
+  </script>
 </body>
 </html>
