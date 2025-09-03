@@ -1,120 +1,36 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Milend SMS</title>
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      height: 100vh;
-    }
-    .sidebar {
-      width: 250px;
-      background-color: #ffffff;
-      border-right: 1px solid #ccc;
-      overflow-y: auto;
-    }
-    .chat-thread {
-      padding: 1rem;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-    }
-    .chat-thread:hover {
-      background-color: #f0f0f0;
-    }
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .header {
-      background-color: #ffffff;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid #ccc;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #666;
-    }
-    .chat-container {
-      padding: 2rem;
-      height: 100%;
-      overflow-y: auto;
-      flex-grow: 1;
-    }
-    .message {
-      max-width: 60%;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      position: relative;
-      font-size: 0.95rem;
-      line-height: 1.4;
-    }
-    .from-user {
-      background-color: #cce0ff;
-      color: #000;
-      margin-left: auto;
-      border-bottom-right-radius: 0;
-    }
-    .from-customer {
-      background-color: #e6e6e6;
-      color: #000;
-      border-bottom-left-radius: 0;
-    }
-    .timestamp {
-      font-size: 0.75rem;
-      color: #888;
-      margin-top: 0.2rem;
-    }
-    .input-container {
-      display: flex;
-      border-top: 1px solid #ccc;
-      padding: 1rem 2rem;
-      background-color: #fff;
-    }
-    .input-container input {
-      flex: 1;
-      padding: 0.75rem;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .input-container button {
-      background-color: #6264a7;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      margin-left: 10px;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Milend SMS</title>
 </head>
 <body>
-  <div class="sidebar">
-    <div class="chat-thread">206-555-0100</div>
-    <div class="chat-thread">470-555-0123</div>
-    <div class="chat-thread">678-555-0199</div>
-  </div>
-  <div class="main">
-    <div class="header">To: 206-555-0100</div>
-    <div class="chat-container">
-      <div class="message from-customer">Hello!<div class="timestamp">10:45 AM</div></div>
-      <div class="message from-user">Hi! How are you?<div class="timestamp">10:45 AM</div></div>
-      <div class="message from-customer">I’m good, thanks.<div class="timestamp">10:46 AM</div></div>
-      <div class="message from-user">Great to hear 3!<div class="timestamp">10:46 AM</div></div>
-    </div>
-    <div class="input-container">
-      <input type="text" placeholder="Type a new message" />
-      <button>➤</button>
-    </div>
-  </div>
+    <h2>Milend SMS - Outbound Test</h2>
+    <input type="text" id="to" placeholder="Enter 10-digit number" />
+    <br><br>
+    <textarea id="message" placeholder="Type your message..."></textarea>
+    <br><br>
+    <button onclick="sendSMS()">Send</button>
+    <p id="response"></p>
+
+    <script>
+        async function sendSMS() {
+            const to = document.getElementById('to').value;
+            const message = document.getElementById('message').value;
+            const responseField = document.getElementById('response');
+
+            const res = await fetch('https://example-logicapp-url.com/sendsms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ to, message })
+            });
+
+            const data = await res.json();
+            responseField.innerText = data.error || "Message sent successfully!";
+        }
+    </script>
 </body>
 </html>
