@@ -11,9 +11,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         data = req.get_json()
 
-        text = data.get("text", "")
-        from_number = data.get("from", {}).get("phone_number", "")
-        to_number = data.get("to", [{}])[0].get("phone_number", "")
+        # Telnyx API v1: data is nested under 'data'
+        message_data = data.get("data", {})
+
+        text = message_data.get("text", "")
+        from_number = message_data.get("from", {}).get("phone_number", "")
+        to_number = message_data.get("to", [{}])[0].get("phone_number", "")
 
         logging.info(f"Message from {from_number} to {to_number}: {text}")
 
