@@ -1,20 +1,20 @@
-name: Deploy Azure Function (Python)
+name: Build and deploy Python function app to Azure Function App
 
 on:
   push:
     branches:
-      - main  # or "master" or whatever your default branch is
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Setup Python
+      uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
@@ -23,9 +23,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Deploy to Azure Functions
+    - name: 'Deploy to Azure Functions'
       uses: Azure/functions-action@v1
       with:
-        app-name: 'smsredirector'
-        package: '.'
+        app-name: 'smsredirector' # ✅ Your Function App name
+        package: '.'              # ✅ Root of your repo (where host.json lives)
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
